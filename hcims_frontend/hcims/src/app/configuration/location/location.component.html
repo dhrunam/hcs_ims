@@ -1,0 +1,169 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+            Data save successfully.
+        </div>
+        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+            Data could not saved!! Please try again.
+        </div>
+        <div class=" p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Location</h1>
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Location</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Location</th>
+                        <th>Office</th>
+                        <th>Type</th>
+                        <th>Parents Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of location_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.name}}</td>
+                        <td>{{f.related_office.name}}</td>
+                        <td>{{f.type}}</td>
+                        <td> <span *ngIf="f.related_location">{{f.related_location.name}}</span></td>
+
+
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Location</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 ms-5 mx-5">
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Location<span class="text-danger">*</span></label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                            placeholder="e.g. Block-A" [ngClass]="{'is-invalid': submitted && f['name'].errors}"
+                            required>
+
+                        <div class="invalid-feedback" *ngIf=" submitted && f['name'].errors">
+                            <div *ngIf="f['name'].errors['required']">
+                                Location is required.
+                            </div>
+                            <div *ngIf="f['name'].errors['maxlength']">Maximum number of Characters should not be more
+                                then 128.</div>
+                            <div *ngIf="f['name'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more then
+                                3 Characters</div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Office<span class="text-danger">*</span></label>
+                        <select class="form-select" id="office" name="office" formControlName="office"
+                            [ngClass]="{'is-invalid': submitted && f['office'].errors}" required>
+                            <option value="" disabled>Choose a Office</option>
+                            <option *ngFor="let t of office_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf=" submitted && f['office'].errors">
+                            <div *ngIf="f['office'].errors['required']">
+                                Office is required.
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Type<span class="text-danger">*</span></label>
+                        <select class="form-select" id="type" name="type" formControlName="type"
+                            [ngClass]="{'is-invalid': submitted && f['type'].errors}" required>
+                            <option value="" disabled>Choose a Type</option>
+                            <option *ngFor="let t of type_choices" [ngValue]="t.value">{{ t.name }}</option>
+                        </select>
+                        <div class="invalid-feedback" *ngIf=" submitted && f['type'].errors">
+                            <div *ngIf="f['type'].errors['required']">
+                                Type is required.
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Parent Location</label>
+                        <select class="form-select" id="parents_location" name="parents_location"
+                            formControlName="parents_location">
+                            <option value="" disabled>Choose a any or none</option>
+                            <option *ngFor="let t of location_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- <div class="mb-4 ms-5 d-flex">
+                    <div class="d-block  w-100">
+                        <label for="username" class="form-label">Location</label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" 
+                         required>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name" 
+                        placeholder="e.g. Desktop Computer"  required>
+                    </div>
+                    <div class="d-block  w-100">
+                        <label for="username" class="form-label">Office</label>
+                        <select class="form-control" id="office" name="office" formControlName="office" 
+                        required>
+                        <option value="" disabled>Choose a Office</option>
+                        <option *ngFor="let t of office_list.results" [ngValue]="t.id">{{ t.name }}</option>
+         
+                       </select>
+
+                    </div>
+               </div>
+                <div class="mb-4 ms-5 d-flex" style="width:50%">
+                    <div class="d-block  w-100">
+                        <label for="username" class="form-label">Type</label>
+                        <select class="form-control" id="type" name="type" formControlName="type" 
+                        required>
+                        <option value="" disabled>Choose a Type</option>
+                        <option *ngFor="let t of type_choices" [ngValue]="t.value">{{ t.name }}</option>
+         
+                       </select>
+
+                    </div>
+                    <div class="d-block  w-100">
+                        <label for="username" class="form-label">Parent Location</label>
+                        <select class="form-control" id="parents_location" name="parents_location" formControlName="parents_location" 
+                        required>
+                        <option value="" disabled>Choose a any or none</option>
+                        <option *ngFor="let t of location_list.results" [ngValue]="t.id">{{ t.name }}</option>
+         
+                       </select>
+
+                    </div>
+
+                </div> -->
+
+                <div class="text-center mt-5">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,221 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3">
+            <!-- <div class="title mt-4 text-center">
+                <h1>Purchase Items</h1>
+            </div> -->
+            <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="button text-left mb-4">
+                <label for="" class="form-label">Purchase Order</label>
+                <div class="ng-autocomplete">
+                    <ng-autocomplete 
+                      [data]="purchase_orders"
+                      [searchKeyword]="keyword"
+                      placeholder="Select Order No"
+                      (selected)='selectEvent($event)'
+                      (inputChanged)='onChangeSearch($event)'
+                      (inputFocused)='onFocused($event)'
+                      [itemTemplate]="itemTemplate"
+                      [notFoundTemplate]="notFoundTemplate">                                 
+                    </ng-autocomplete>
+                    
+                    <ng-template #itemTemplate let-item>
+                    <a [innerHTML]="item.name"></a>
+                    </ng-template>
+                    
+                    <ng-template #notFoundTemplate let-notFound>
+                    <div [innerHTML]="notFound"></div>
+                    </ng-template>
+                </div>
+
+                <!-- <button class="btn btn-primary" (click)="onShowTable()">+ Add Purchase Itmes</button> -->
+            </div>
+            <div  *ngIf="isShowTable">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="title mt-4 text-center">
+                            <h1>Purchase Items</h1>
+                        </div>
+                        <table *ngIf="purchase_item_list.results" datatable [dtOptions]="dtOptions" class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Item</th>
+                                    <th>Specification</th>
+                                    <th>Quantity</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let f of purchase_item_list.results; let i=index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{f.related_item.name}}</td>
+                                    <td>{{f.item_specification}}</td>
+                                    <td>{{f.quantity}}</td>
+                                    <td>
+                                        <input type="button" class="btn btn-primary ms-3" value="Receive" style="height:10%; margin-top: 2rem;"
+                                         data-bs-toggle="modal" data-bs-target="#receivedModalCenter" (click)="onItemSelect(f)">
+                                        </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="title mt-4 text-center">
+                            <h1>Received Items</h1>
+                        </div>
+                        <table *ngIf="received_item_list.results" datatable [dtOptions]="dtOptions"  class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No.</th>
+                                    <th>Item</th>
+                                    <th> Quantity</th>
+                                    <th> Date</th>
+                                    <th> By</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let f of received_item_list.results; let i=index;">
+                                    <td>{{i+1}}</td>
+                                    <td>{{f.related_item.name}}</td>
+                                    <td>{{f.quantity_received}}</td>
+                                    <td>{{f.received_on}}</td>
+                                    <td>{{f.related_received_by_user.username}}</td>
+                                    
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+
+        <div class="modal fade" id="receivedModalCenter" tabindex="-1" role="dialog" aria-labelledby="receivedModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="receivedModalCenterTitle">Record Item Received</h5>
+                  <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" > 
+                <div class="modal-body">
+                        <div class="row mt-5 mb-4 ms-5 mx-5">
+                            <h6 >{{item_name}}</h6>
+                            <div  >
+                                <table *ngIf="received_item.results"  class="table table-bordered row-border hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Received Quantity</th>
+                                            <th>Received Date</th>
+                                            <th>Received By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let f of received_item.results; let i=index;">
+                                            <td>{{i+1}}</td>
+                                            <td>{{f.quantity_received}}</td>
+                                            <td>{{f.received_on}}</td>
+                                            <td>{{f.related_received_by_user.username}}</td>
+                                            
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row mt-5 mb-4 ms-5 mx-5">
+                             <div class="col-md-6">
+                                <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                                <input type="hidden" class="form-control" id="purchase" name="purchase" formControlName="purchase"
+                                 required>
+                                 <input type="hidden" class="form-control" id="item" name="item" formControlName="item"
+                                 required>
+                                <label for="quantity_received" class="form-label">Quantity Received</label>
+                                <input type="number" class="form-control" id="quantity_received" name="quantity_received" formControlName="quantity_received" 
+                                placeholder=""  max="{{max_quantity}}"  required>
+                        
+                            </div>
+                            <div class="col-md-6">
+                                <label for="received_on" class="form-label">Received On</label>
+                                <input type="date" class="form-control" id="received_on" name="received_on" formControlName="received_on" 
+                                placeholder=""  required>
+                                <div *ngIf="received_on?.invalid && (received_on?.dirty || received_on?.touched)"
+   
+                                    class="alert alert-danger">
+
+                                    <div *ngIf="received_on?.errors?.['required']">
+                                        Received on date is required.
+                                    </div>
+                                    <!-- <div *ngIf="name.errors?.['minlength']">
+                                        Name must be at least 4 characters long.
+                                    </div>
+                                    <div *ngIf="name.errors?.['forbiddenName']">
+                                        Name cannot be Bob.
+                                    </div> -->
+                                </div>
+                                <!-- <small class="text-danger" *ngIf="showDateErr">Please select a date before proceeding.</small> -->
+                            </div>
+        
+                       </div>
+                        <div class="row mb-4 ms-5 mx-5">
+        
+                            <div class="col-md-12">
+                                <label for="remarks" class="form-label">Remarks</label>
+                                <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required rows="5" col="10"></textarea>
+                                
+                                <div *ngIf="remarks?.invalid && (remarks?.dirty || remarks?.touched)"
+                                class="alert alert-danger">
+
+                                <div *ngIf="remarks?.errors?.['required']">
+                                    Remark is required.
+                                </div>
+                                <!-- <div *ngIf="name.errors?.['minlength']">
+                                    Name must be at least 4 characters long.
+                                </div>
+                                <div *ngIf="name.errors?.['forbiddenName']">
+                                    Name cannot be Bob.
+                                </div> -->
+                            </div>
+                            
+                            </div>
+                        </div>
+        
+                        <!-- <div class="mt-4 text-center">
+                            <input type="submit" class="btn btn-primary ms-3" value="Save">
+                            <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                        </div> -->
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal">Close</button>
+
+                  <input type="submit" class="btn btn-primary ms-3" [disabled]="purchase_quantity <= received_quantity" value="Save">
+                </div>
+            </form>
+              </div>
+            </div>
+          </div>
+
+        <div class="form" *ngIf="!isShowTable">
+
+
+        </div>
+    </div>
+</div>
+

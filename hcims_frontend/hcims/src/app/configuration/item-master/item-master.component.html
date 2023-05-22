@@ -1,0 +1,108 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+            Data save successfully.
+        </div>
+        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+            Data could not saved!! Please try again.
+        </div>
+        <div class=" p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Item</h1>
+            </div>
+
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Item</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Item</th>
+                        <th>Type</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of item_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.name}}</td>
+                        <td>{{f.related_type.name}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Item</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-4 ms-5">
+                        <label for="name" class="form-label">Item<span class="text-danger">*</span></label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                            placeholder="e.g. Desktop Computer"
+                            [ngClass]="{'is-invalid': submitted && f['name'].errors}" required>
+                        <div class="invalid-feedback" *ngIf="submitted && f['name'].errors">
+                            <div *ngIf="f['name'].errors['required']"> Item name is required.</div>
+                        </div>
+
+                    </div>
+                    <div class="col-md-6 ms-5">
+                        <label for="username" class="form-label">Item Type<span class="text-danger">*</span></label>
+                        <!-- <select class="form-select" id="item_type" name="item_type" formControlName="item_type"
+                            required>
+                            <option value="" disabled>Choose a Type</option>
+                            <option *ngFor="let t of item_type_list.results" [ngValue]="t.id">{{ t.name }}</option>
+
+                        </select> -->
+
+                        <div class="ng-autocomplete col-md-6">
+                            <ng-autocomplete #item_auto_complete [data]="item_type_list" [searchKeyword]="keyword"
+                                placeholder="select item type" (selected)='selectEvent($event)'
+                                (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)'
+                                [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate" [minQueryLength]="3"
+                                [initialValue]="selected_item_type" [inputCleared]="onInputCleared($event)">
+                            </ng-autocomplete>
+
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.name"></a>
+                            </ng-template>
+
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+
+                        </div>
+
+                        <div class="invalid-feedback" *ngIf="submitted && f['item_type'].errors">
+                            <div *ngIf="f['item_type'].errors['required']"> Item Type is required.</div>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-12 ms-5">
+                        <input type="submit" class="btn btn-primary ms-3" value="Save">
+                        <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                    </div>
+
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

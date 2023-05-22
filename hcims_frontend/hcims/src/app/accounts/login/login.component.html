@@ -1,0 +1,48 @@
+<section class="vh-100">
+    <div class="container py-1 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col col-xl-8">
+                <div class="card p-3" style="border-radius: 1rem;">
+                    <div class="row g-0">
+                        <div class="col-md-6 col-lg-5 d-none d-md-block">
+                            <div class="text-center mt-5 mb-4">
+                                <img src="../../assets/hcs_logo.png" class="logo" alt="login form" height="280px;" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                            <div class="card-body p-2 p-lg-5 text-black">
+                                <div class="title">
+                                    <div class="text-center mt-2 mb-4">
+                                        <img src="../../assets/hcs_logo.png" class="logo" alt="login form"
+                                            height="180px" />
+                                    </div>
+                                </div>
+                                <h2 class="heading fw-normal mb-3 pb-3 text-center" style="letter-spacing: 1px;">Court
+                                    Inventory Management System</h2>
+                                <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                                    <div class="form-floating mb-4">
+                                        <input type="text" class="form-control" id="username" name="username"
+                                            formControlName="username" placeholder="name@example.com" required>
+                                        <label for="username">Username<span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="form-floating mb-4">
+                                        <input type="password" class="form-control" id="password" name="password"
+                                            formControlName="password" placeholder="password" required>
+                                        <label for="password">Password<span class="text-danger">*</span></label>
+                                    </div>
+                                    <div class="pt-1 mb-1 text-center">
+                                        <input type="submit" class="btn btn-primary w-100" value="Login">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="text-center">
+                        <p>2022 © Copyright High Court of Sikkim</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

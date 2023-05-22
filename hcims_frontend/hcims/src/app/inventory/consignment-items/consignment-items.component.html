@@ -1,0 +1,185 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Consignment Items</h1>
+            </div>
+
+            <div class="title mt-4 d-flex justify-content-center">
+                <div class="col-md-3">
+                    <label for="list_type" class="form-label mx-2">Summary List </label>
+                    <input type="radio" name="list_type" id="list_type" [value]="list_type.summary"
+                        (change)="onListTypeCheckChange($event)" checked>
+
+                </div>
+                <div class="col-md-3">
+                    <label for="list_type" class="form-label mx-2">Received itrem list</label>
+                    <input type="radio" name="list_type" id="list_type" [value]="list_type.details"
+                        (change)="onListTypeCheckChange($event)">
+
+                </div>
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Received Item</button>
+            </div>
+            <!-- <div  *ngIf="dispatch_details.related_dispatch_to_office" class="title mt-4 text-left">
+                <H4>To</H4>
+                <small>{{dispatch_details.dispatch_to_address}}</small><br>
+                <small>{{dispatch_details.related_dispatch_to_office.name}}</small><br>
+                <small>{{dispatch_details.related_dispatch_to_office.address_line1}}</small><br>
+                <small>{{dispatch_details.related_dispatch_to_office.address_line2}}</small><br>
+                <small>{{dispatch_details.related_dispatch_to_office.address_line3}}</small>
+            </div> -->
+            <div *ngIf="switchTable" class="title mt-4 text-left">
+
+                <table *ngIf="item_dispatch_list.results" datatable [dtOptions]="dtOptions"
+                    class="table table-bordered row-border hover">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Purchase Order</th>
+                            <th>Item</th>
+                            <th>Quantity</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of item_dispatch_list.results; let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{f.related_purchase.order_no}}</td>
+                            <td>{{f.related_item.name}}</td>
+                            <td>{{f.quantity_dispatch}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div *ngIf="!switchTable" class="title mt-4 text-left">
+
+                <table *ngIf="item_received_list.results" datatable [dtOptions]="dtOptions"
+                    class="table table-bordered row-border hover">
+                    <thead>
+                        <tr>
+                            <th>S.No.</th>
+                            <th>Item</th>
+                            <th>Serial No</th>
+                            <th>Model No</th>
+                            <th>Specification</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let f of item_received_list.results; let i=index">
+                            <td>{{i+1}}</td>
+                            <td>{{f.related_item.name}}</td>
+                            <td>{{f.serial_no}}</td>
+                            <td>{{f.model_no}}</td>
+                            <td>{{f.specification}}</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Item Recevied Details</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="hidden" class="form-control" id="dispatch" name="dispatch"
+                            formControlName="dispatch" required>
+                        <input type="hidden" class="form-control" id="purchase" name="purchase"
+                            formControlName="purchase" required>
+                        <input type="hidden" class="form-control" id="item" name="item" formControlName="item" required>
+                        <input type="hidden" class="form-control" id="is_in_use" name="is_in_use"
+                            formControlName="is_in_use" required>
+                        <label for="itemd_ropdwon" class="form-label">Item</label>
+                        <select class="form-select" id="item_dropdown" name="item_dropdown"
+                            formControlName="item_dropdown" (change)="onItemSelectChange($event)" required>
+                            <option disabled selected> -- Choose an Item -- </option>
+                            <option *ngFor="let t of item_dispatch_list.results"
+                                [ngValue]="t.dispatch +'|'+ t.purchase +'|'+ t.item">{{
+                                t.related_item.name+'(quantity-'+t.quantity_dispatch +')'}}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="brand" class="form-label">Brand</label>
+                        <input type="text" class="form-control" id="brand" name="brand" formControlName="brand"
+                            placeholder="" required>
+
+                    </div>
+
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="serial_no" class="form-label">Serial No</label>
+                        <input type="text" class="form-control" id="serial_no" name="serial_no"
+                            formControlName="serial_no" placeholder="" required>
+
+                    </div>
+                    <div class="col-md-6">
+                        <label for="model_no" class="form-label">Model No</label>
+                        <input type="text" class="form-control" id="model_no" name="model_no" formControlName="model_no"
+                            placeholder="" required>
+
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="warranty_period" class="form-label">Warranty (in month) </label>
+                        <input type="text" class="form-control" id="warranty_period" name="warranty_period"
+                            formControlName="warranty_period" placeholder="" required>
+
+                    </div>
+
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                    <div class="col-md-12">
+                        <label for="specification" class="form-label">Specification</label>
+                        <textarea class="form-control" id="specification" name="specification"
+                            formControlName="specification" required rows="5" col="10"></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="row mb-4 ms-5 mx-5">
+
+                    <div class="col-md-12">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required
+                            rows="5" col="10"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+
+
+
+    </div>
+</div>

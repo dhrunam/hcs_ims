@@ -1,0 +1,391 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="container">
+            <div class="stepwizard">
+                <div class="stepwizard-row setup-panel">
+                    <div class="stepwizard-step">
+                        <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                        <p>Consignment Items</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                        <p>Acknowledgement</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                        <p>Print Acknowledgement Letter</p>
+                    </div>
+                    <!-- <div class="stepwizard-step">
+                        <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                        <p>Acknowledgement</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+                        <p>Step-4</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+                        <p> step-5 </p>
+                    </div> -->
+                </div>
+            </div>
+            <div role="form">
+                <div class="row setup-content" id="step-1">
+                    <div class="col-xs-12">
+                        <div class="p-3" *ngIf="isShowReceivedItemsEntry">
+                            <div class="title mt-4 text-center">
+                                <h1>Consignment Items</h1>
+                            </div>
+
+                            <div class="title mt-4 d-flex justify-content-center">
+                                <div class="col-md-3">
+                                    <label for="list_type" class="form-label mx-2">Summary List </label>
+                                    <input type="radio" name="list_type" id="list_type" [value]="list_type.summary"
+                                        (change)="onListTypeCheckChange($event)" checked>
+
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="list_type" class="form-label mx-2">Received itrem list</label>
+                                    <input type="radio" name="list_type" id="list_type" [value]="list_type.details"
+                                        (change)="onListTypeCheckChange($event)">
+
+                                </div>
+                            </div>
+                            <!-- <div class="button text-end mb-4">
+                                <button class="btn btn-primary" (click)="onShowTable()">+ Add Received Item</button>
+                            </div> -->
+                            <!-- <div  *ngIf="dispatch_details.related_dispatch_to_office" class="title mt-4 text-left">
+                                                <H4>To</H4>
+                                                <small>{{dispatch_details.dispatch_to_address}}</small><br>
+                                                <small>{{dispatch_details.related_dispatch_to_office.name}}</small><br>
+                                                <small>{{dispatch_details.related_dispatch_to_office.address_line1}}</small><br>
+                                                <small>{{dispatch_details.related_dispatch_to_office.address_line2}}</small><br>
+                                                <small>{{dispatch_details.related_dispatch_to_office.address_line3}}</small>
+                                            </div> -->
+                            <div *ngIf="switchTable" class="title mt-4 text-left">
+
+                                <table *ngIf="item_dispatch_list.results" datatable [dtOptions]="dtOptions"
+                                    class="table table-bordered row-border hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Purchase Order</th>
+                                            <th>Item</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let f of item_dispatch_list.results; let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{f.related_purchase.order_no}}</td>
+                                            <td>{{f.related_item.name}}</td>
+                                            <td>{{f.quantity_dispatch}}</td>
+                                            <td>
+                                                <input type="button" class="btn btn-primary ms-3"
+                                                    value="View/Entry Item(s)"
+                                                    (click)="onEnableItemEntry(f.id,f.item,f.quantity_dispatch)"
+                                                    style="height:10%; margin-top: 2rem;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="!switchTable" class="title mt-4 text-left">
+
+                                <table *ngIf="item_received_list.results" datatable [dtOptions]="dtOptions"
+                                    class="table table-bordered row-border hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Item</th>
+                                            <th>Serial No</th>
+                                            <th>Model No</th>
+                                            <th>Specification</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let f of item_received_list.results; let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{f.related_item.name}}</td>
+                                            <td>{{f.serial_no}}</td>
+                                            <td>{{f.related_item_dispatch_list.model_no}}</td>
+                                            <td>{{f.related_item_dispatch_list.specification}}</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- <div class="page-buttons">
+                                                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                                                </button>
+                                                <button class="btn next" (click)="fetchNext()"> Next
+                                                </button>
+                                             </div>
+                                               -->
+                        </div>
+
+                        <div class="form" *ngIf="!isShowReceivedItemsEntry">
+                            <div class="title mt-4 text-center">
+                                <h1>Item Specifications</h1>
+                            </div>
+                            <form [formGroup]="receivedItemEntryForm" (ngSubmit)="onItemEntryFormSubmit()">
+                                <input type="hidden" name="item_dispatch_list" name="item_dispatch_list"
+                                    formControlName="item_dispatch_list">
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+
+                                    <div class="col-md-5">
+                                        <label for="brand" class="form-label">Brand</label>
+                                        <input type="text" class="form-control" id="brand" name="brand"
+                                            formControlName="brand" placeholder="" required>
+
+                                    </div>
+                                    <div class="col-md-5">
+                                        <label for="model_no" class="form-label">Model No</label>
+                                        <input type="text" class="form-control" id="model_no" name="model_no"
+                                            formControlName="model_no" placeholder="" required>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="warranty_period" class="form-label">Warranty (in month) </label>
+                                        <input type="text" class="form-control" id="warranty_period"
+                                            name="warranty_period" formControlName="warranty_period" placeholder=""
+                                            required>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-12">
+                                        <label for="specification" class="form-label">Specification</label>
+                                        <textarea class="form-control" id="specification" name="specification"
+                                            formControlName="specification" required rows="5" col="10"></textarea>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12" formArrayName="items">
+                                        <div class="title mt-4 text-center">
+                                            <h1> Items Serial Numbers</h1>
+                                        </div>
+                                        <table *ngIf="receivedEntryFormItems" class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>S.No.</th>
+                                                    <th>Serial Number</th>
+                                                    <th>Remarks</th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let f of receivedEntryFormItems.controls; let i=index"
+                                                    [formGroup]="f">
+
+                                                    <td>{{i+1}}</td>
+                                                    <td>
+
+                                                        <input type="hidden" id="id" name="id" formControlName="id">
+                                                        <input type="hidden" id="dispatch" name="dispatch"
+                                                            formControlName="dispatch">
+                                                        <input type="hidden" id="purchase" name="purchase"
+                                                            formControlName="purchase">
+                                                        <input type="hidden" id="item" name="item"
+                                                            formControlName="item">
+                                                        <input type="text" class="form-control" id="serial_no"
+                                                            name="serial_no" formControlName="serial_no" placeholder=""
+                                                            required>
+                                                    </td>
+
+                                                    <td>
+                                                        <textarea class="form-control" id="remarks" name="remarks"
+                                                            formControlName="remarks" required rows="5"
+                                                            col="10">{{f.value.remarks}}</textarea>
+
+                                                    </td>
+
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                    Data save successfully. You can proceed to next step.
+                                </div>
+                                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                    Data could not saved!! Please try again.
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                    <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                        (click)="onItemEntryCancel()">
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <button class="btn btn-primary prevBtn mx-2" type="button"
+                                    (click)="onStep1PreviousClick()">Previous</button>
+                                <button class="btn btn-primary nextBtn " type="button"
+                                    (click)="onAcknowledgementTabLoad()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-2">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <div class="title mt-4 text-center">
+                                <h1>Acknowledgement</h1>
+                            </div>
+                            <form [formGroup]="acknowledgementEntryForm" (ngSubmit)="onAcknowledgementSubmit()">
+
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-10">
+                                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id"
+                                            required>
+                                        <label for="acknowledge_to_address" class="form-label">To Address</label>
+                                        <input type="text" class="form-control" id="acknowledge_to_address"
+                                            name="acknowledge_to_address" formControlName="acknowledge_to_address"
+                                            placeholder="" required>
+
+                                    </div>
+                                    <div class="col-md-2">
+                                        <label for="received_on" class="form-label">Receive On</label>
+                                        <input type="date" class="form-control" id="received_on" name="received_on"
+                                            formControlName="received_on" placeholder="" required>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-12">
+                                        <label for="acknowledge_subject" class="form-label">Subject</label>
+                                        <textarea class="form-control" id="acknowledge_subject"
+                                            name="acknowledge_subject" formControlName="acknowledge_subject" required
+                                            rows="5" col="10"></textarea>
+
+                                    </div>
+
+
+
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-12">
+                                        <label for="acknowledge_description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="acknowledge_description"
+                                            name="acknowledge_description" formControlName="acknowledge_description"
+                                            required rows="5" col="10"></textarea>
+
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="row mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-12">
+                                        <label for="acknowledge_remarks" class="form-label">Remarks</label>
+                                        <textarea class="form-control" id="acknowledge_remarks"
+                                            name="acknowledge_remarks" formControlName="acknowledge_remarks" required
+                                            rows="5" col="10"></textarea>
+                                    </div>
+
+
+                                </div>
+
+                                <div class="row mb-4 ms-5 mx-5">
+                                    <div class="col-md-12">
+                                        <label for="is_received" class="form-label">Acknowledge </label>
+                                        <input type="checkbox" name="is_received" id="is_received"
+                                            formControlName="is_received" required>
+                                    </div>
+                                </div>
+                                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                    Data save successfully. You can proceed to next step.
+                                </div>
+                                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                    Data could not saved!! Please try again.
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                    <!-- <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                        (click)="onShowTable()"> -->
+                                </div>
+                            </form>
+
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                    <button class="btn btn-primary prevBtn mx-2" type="button"
+                                        (click)="onStep2PreviousClick">Previous</button>
+                                    <button class="btn btn-primary nextBtn " type="button">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-3">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <div class="title mt-4 text-center">
+                                <h1>Print Acknowledgement 
+                                    <button class="btn btn-primary ms-3" (click)="onPrintDispatchLetter()"><i class="bi bi-printer"></i></button>
+                                </h1>
+                            </div>
+                            <!-- <form [formGroup]="acknowledgementUploadEntryForm" (ngSubmit)="onAcknowledgementSubmit()">
+
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                    <div class="col-md-10">
+                                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id"
+                                            required>
+                                        <label for="acknowledge_doc_url" class="form-label">Upload Acknowledgemnt</label>
+                                        <input type="file" class="form-control" id="acknowledge_doc_url"
+                                            name="acknowledge_doc_url" formControlName="acknowledge_doc_url"
+                                            placeholder="" required>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                    Data save successfully. You can proceed to next step.
+                                </div>
+                                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                    Data could not saved!! Please try again.
+                                </div>
+                                <div class="mt-4 text-center">
+                                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+
+                                </div>
+                            </form> -->
+
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                    <button class="btn btn-primary prevBtn mx-2" type="button"
+                                        (click)="onStep3PreviousClick">Previous</button>
+                                    <!-- <button class="btn btn-primary nextBtn " type="button">Next</button> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+               
+            </div>
+        </div>
+    </div>
+</div>

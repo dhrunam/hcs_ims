@@ -1,0 +1,122 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="table p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Purchase Items</h1>
+            </div>
+            <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Purchase Itmes</button>
+            </div>
+            <table *ngIf="purchase_item_list.results" datatable [dtOptions]="dtOptions" class="table table-bordered row-border hover">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Purchase Order</th>
+                        <th>Item</th>
+                        <th>Type</th>
+                        <th>Specification</th>
+                        <th>Quantity</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of purchase_item_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.related_purchase.order_no}}</td>
+                        <td>{{f.related_item.name}}</td>
+                        <td>{{f.related_item.related_item_type.name}}</td>
+                        <td>{{f.item_specification}}</td>
+                        <td>{{f.quantity}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)" style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Purchase Items</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" > 
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="hidden" class="form-control" id="purchase" name="purchase" formControlName="purchase"
+                         required>
+                         <label for="purchase" class="form-label">Purchase Order</label>
+                         <select class="form-select" id="purchase" name="purchase" formControlName="purchase" required>
+                             <option  selected> -- Choose a Purchase Order -- </option>
+                             <option *ngFor="let t of purchase_list.results" [ngValue]="t.id">{{ t.order_no }}</option>
+                         </select>
+                     </div>
+                     <div class="col-md-6">
+                        <label for="item" class="form-label">Item</label>
+                        <select class="form-select" id="item" name="item" formControlName="item" required>
+                            <option  selected> -- Choose a Item -- </option>
+                            <option *ngFor="let t of item_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                     </div>
+
+               </div>
+               <div class="row mb-4 ms-5 mx-5">
+                <div class="col-md-12">
+                    <label for="item_specification" class="form-label">Specification</label>
+                    <textarea class="form-control" id="item_specification" name="item_specification" 
+                    formControlName="item_specification" required rows="5" col="10"></textarea>
+           
+                </div>
+               </div>
+
+               <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-4">
+                        <label for="unit" class="form-label">Unit</label>
+                        <select class="form-select" id="unit" name="unit" formControlName="unit" required>
+                            <option  selected> -- Choose a Unit -- </option>
+                            <option *ngFor="let t of unit_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                
+                    </div>
+                    <div class="col-md-4">
+                        <label for="unit_price" class="form-label">Unit Price</label>
+                        <input type="text" class="form-control" id="unit_price" name="unit_price" formControlName="unit_price" 
+                        placeholder=""  required>
+                
+                    </div>
+                    <div class="col-md-4">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="text" class="form-control" id="quantity" name="quantity" formControlName="quantity" 
+                        placeholder=""  required>
+                
+                    </div>
+
+
+                </div>
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-12">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required rows="5" col="10"></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

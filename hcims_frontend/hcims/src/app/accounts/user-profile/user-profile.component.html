@@ -1,0 +1,207 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>User List</h1>
+            </div>
+            <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add User</button>
+            </div>
+            <table *ngIf="user_list.results" datatable [dtOptions]="dtOptions"
+                class="table table-bordered row-border hover">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Account Name</th>
+                        <th>Name</th>
+                        <th>Designation</th>
+                        <th>Office</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of user_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.username}}</td>
+                        <td>{{f.first_name }} {{f.last_name}}</td>
+                        <td>{{f.related_profile[0]?.related_designation?.name}}</td>
+                        <td>{{f.related_profile[0]?.related_office?.name}}<br>
+                            {{f.related_profile[0]?.related_office?.address_line1}}
+
+                        </td>
+                        <td>
+                            <input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;">
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Register User</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <label for="username" class="form-label">Account Name</label>
+                        <input type="text" class="form-control" id="username" name="username" formControlName="username"
+                            placeholder="" [ngClass]="{ 'is-invalid': submitted && f['username'].errors }" required>
+                            <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
+                                <div *ngIf="f['username'].errors['required']">Name is required</div>
+                                <div *ngIf="f['username'].errors['maxlength']">Maximum number of Characters should not be more
+                                    then 256.</div>
+                                <div *ngIf="f['username'].errors['minlength']">Minimum number of Characters should be equal to
+                                    or more then
+                                    3 Characters</div>
+                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" formControlName="email"
+                            placeholder="" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" [email]="true" required>
+                            <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                                <div *ngIf="f['email'].errors['required']">Email is required</div>
+                                <div *ngIf="f['email'].errors['email']">Please provide valid email</div>
+                                <!-- <div *ngIf="f['email'].errors['maxlength']">Maximum number of Characters should not be more
+                                    then 256.</div>
+                                <div *ngIf="f['email'].errors['minlength']">Minimum number of Characters should be equal to
+                                    or more then
+                                    3 Characters</div> -->
+                            </div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="first_name" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="first_name" name="first_name"
+                            formControlName="first_name" placeholder="" [ngClass]="{ 'is-invalid': submitted && f['first_name']?.errors }" required>
+                            <div *ngIf="submitted && f['first_name'].errors" class="invalid-feedback">
+                                <div *ngIf="f['first_name'].errors['required']">First Name is required</div>
+                              
+                                <div *ngIf="f['first_name'].errors['maxlength']">Maximum number of Characters should not be more
+                                    then 256.</div>
+                                <div *ngIf="f['first_name'].errors['minlength']">Minimum number of Characters should be equal to
+                                    or more then
+                                    3 Characters</div>
+                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="last_name" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name"
+                            formControlName="last_name" placeholder="" [ngClass]="{ 'is-invalid': submitted && f['last_name']?.errors }" required>
+                            <div *ngIf="submitted && f['first_name'].errors" class="invalid-feedback">
+                                <div *ngIf="f['last_name'].errors['required']">Last Name is required</div>
+                              
+                                <div *ngIf="f['last_name'].errors['maxlength']">Maximum number of Characters should not be more
+                                    then 256.</div>
+                                <div *ngIf="f['last_name'].errors['minlength']">Minimum number of Characters should be equal to
+                                    or more then
+                                    3 Characters</div>
+                            </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="designation" class="form-label">Designation</label>
+                        <select class="form-select" id="designation" name="designation" formControlName="designation"
+                        [ngClass]="{ 'is-invalid': submitted && f['designation']?.errors }"  required>
+                            <option> -- Choose a Designation -- </option>
+                            <option *ngFor="let t of designation_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['designation'].errors" class="invalid-feedback">
+                            <div *ngIf="f['designation'].errors['required']">Designation is required</div>
+                          
+                         
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="office" class="form-label">Office</label>
+                        <select class="form-select" id="office" name="office" formControlName="office" [ngClass]="{ 'is-invalid': submitted && f['office']?.errors }"  required>
+                            <option> -- Choose an Office -- </option>
+                            <option *ngFor="let t of office_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['office'].errors" class="invalid-feedback">
+                            <div *ngIf="f['office'].errors['required']">Office is required</div>
+                          
+                         
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password"
+                            formControlName="password" placeholder=""  [ngClass]="{ 'is-invalid': submitted && f['password']?.errors }"  required>
+                            <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                                <div *ngIf="f['password'].errors['required']">Password is required</div>
+                              
+                             
+                            </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="password2" class="form-label">Confirm Password</label>
+                        <input type="password" class="form-control" id="password2" name="password2"
+                            formControlName="password2" placeholder="" [ngClass]="{ 'is-invalid': submitted && f['password2']?.errors }" required>
+                            <div *ngIf="submitted && f['password2']?.errors" class="invalid-feedback">
+                                <div *ngIf="f['password2']?.errors['required']">Confirm Password is required</div>
+                              
+                                <div *ngIf="submitted && f['password2']?.errors['matching']" class="invalid-feedback">
+                                    Confirm Password does not match
+                                  </div>
+                            </div>
+                           
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="group" class="form-label"> Role </label>
+                        <select class="form-select" id="group" name="group" formControlName="group" [ngClass]="{ 'is-invalid': submitted && f['group']?.errors }" required>
+                            <option> -- Choose an Role -- </option>
+                            <option *ngFor="let t of group_list.results" [ngValue]="t.name">{{ t.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['group']?.errors" class="invalid-feedback">
+                            <div *ngIf="f['group']?.errors['required']">Role is required</div>
+                          
+                         
+                        </div>
+                      
+                    </div> 
+                    <div class="col-md-6">
+                        <label for="contact_number" class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control" id="contact_number" name="contact_number"
+                            formControlName="contact_number" placeholder="" [ngClass]="{ 'is-invalid': submitted && f['contact_number']?.errors }" required>
+                            <div *ngIf="submitted && f['contact_number']?.errors" class="invalid-feedback">
+                                <div *ngIf="f['contact_number']?.errors['required']">Contact Number is required</div>
+                              
+                             
+                            </div>
+                    </div>
+                </div>
+               
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

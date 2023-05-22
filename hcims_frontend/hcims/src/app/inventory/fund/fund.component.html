@@ -1,0 +1,146 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Funds</h1>
+            </div>
+            <div class="alert alert-success ms-5 mx-5 mt-5" *ngIf="isSuccessful">
+                Data save successfully.
+            </div>
+            <div class="alert alert-danger ms-5 mx-5 mt-5" *ngIf="isFail">
+                Data could not saved!! Please try again.
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onAddFundClick()">+ Add Funds</button>
+            </div>
+
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                class="table table-bordered row-border hover" style="width:100%; ">
+                <thead>
+                    <tr>
+                        <!-- <th>S.No.</th> -->
+                        <th>Cheque No</th>
+                        <th>Account Head</th>
+                        <th>Cheque date</th>
+                        <th>Purpose</th>
+                        <th>Received Amt.</th>
+                        <th>Utilized Amt.</th>
+                        <th>Balance Amt.</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of fund_list.results; let i=index">
+                        <!-- <td>{{i+1}}</td> -->
+                        <td>{{f.cheque_no}}</td>
+                        <td>{{f.related_accounthead_name}}</td>
+                        <td>{{f.cheque_date}}</td>
+                        <td>{{f.purpose}}</td>
+                        <td>{{f.cheque_amount}}</td>
+                        <td>{{f.purchase_amount}}</td>
+                        <td>{{f.balance_amount}}</td>
+                        <td>
+                            <input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;">
+                            <input type="button" class="btn btn-primary ms-3" value="View Purchase"
+                                (click)="onRedirectToPurchase(f.id)" style="height:10%; margin-top: 2rem;">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Fund</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Cheque No</label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="cheque_no" name="cheque_no"
+                            formControlName="cheque_no" placeholder="" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">Amount</label>
+                        <input type="text" class="form-control" id="cheque_amount" name="cheque_amount"
+                            formControlName="cheque_amount" placeholder="" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cheque_date" class="form-label">Issue Date</label>
+                        <input type="date" class="form-control" id="cheque_date" name="cheque_date"
+                            formControlName="cheque_date" placeholder="" required>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label for="cheque_date" class="form-label">Received Date</label>
+                        <input type="date" class="form-control" id="date_of_receipt" name="date_of_receipt"
+                            formControlName="date_of_receipt" placeholder="" required>
+
+                    </div>
+
+
+                </div>
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-3">
+                        <label for="account_head" class="form-label">Account Head</label>
+                        <select class="form-select" id="account_head" name="account_head" formControlName="account_head"
+                            required>
+                            <option selected> -- Choose a Account Head -- </option>
+                            <option *ngFor="let t of account_head_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="financial_year" class="form-label">Financial Year</label>
+                        <select class="form-select" id="financial_year" name="financial_year"
+                            formControlName="financial_year" required>
+                            <option selected> -- Choose a Financial Year -- </option>
+                            <option *ngFor="let f of financial_year_list.results" [ngValue]="f.id">{{ f.financial_year
+                                }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="document_url" class="form-label">Upload Cheque</label>
+                        <input type="file" class="form-control" id="document_url" name="document_url" placeholder=""
+                            (change)="onChequeChange($event)" required>
+                        <div *ngIf="present_document_url!=''"><a href="{{present_document_url}}"
+                                rel="noopener noreferrer" download target="_blank">View
+                                File</a>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="username" class="form-label">Purpose</label>
+                        <textarea class="form-control" id="purpose" name="purpose" formControlName="purpose" required
+                            rows="5" col="10"></textarea>
+                    </div>
+
+                    <div class="col-md-12">
+                        <label for="address_line2" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required
+                            rows="5" col="10"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onFormEntryCancelClick()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="alert alert-success" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                Data could not saved!! Please try again.
+            </div>
+            <div class="title mt-4 text-center">
+                <h1>Account Head</h1>
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Account Head</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Account Head</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of account_head_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.name}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Account Head</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+
+                <div class="mb-4 ms-5 d-flex" style="width:50%">
+                    <div class="d-block  w-100">
+                        <label for="username" class="form-label">Account Head <span class="text-danger">*</span>
+                        </label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                            placeholder="" [ngClass]="{ 'is-invalid': submitted && f['name'].errors }" required>
+                        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">Name is required</div>
+                            <div *ngIf="f['name'].errors['maxlength']">Maximum number of Characters should not be more
+                                then 256.</div>
+                            <div *ngIf="f['name'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more then
+                                3 Characters</div>
+                        </div>
+                    </div>
+
+                    <input type="submit" class="btn btn-primary ms-3" value="Save"
+                        style="height:10%; margin-top: 2rem;">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()"
+                        style="height:10%; margin-top: 2rem;">
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>

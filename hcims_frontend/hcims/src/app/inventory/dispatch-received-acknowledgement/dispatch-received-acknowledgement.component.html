@@ -1,0 +1,133 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Consignment Received Details</h1>
+            </div>
+            <!-- <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div> -->
+            <!-- <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Received Acknowledgement</button>
+            </div> -->
+            <table datatable [dtOptions]="dtOptions" class="table table-bordered row-border hover" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>From Office</th>
+                        <th>To Office</th>
+                        <th>Dispatch On</th>
+                        <th>Acknowledge</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of dispatch_details_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.dispatch_from_office}}</td>
+                        <td>{{f.dispatch_to_address}}<br>
+                            {{f.dispatch_to_office}}</td>
+
+                        <td>{{f.dispatch_on}}</td>
+                        <td> <small *ngIf="f.is_received">Yes</small></td>
+                        <td>
+                            <input type="button" class="btn btn-primary ms-3" value="Ack" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;">
+                            <!-- <input type="button" class="btn btn-primary ms-3" value="View Item(s)" (click)="onRedirectToDispatchItemList(f.id)" style="height:10%; margin-top: 2rem;"> -->
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Consignment Received Details</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                    <div class="col-md-10">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <label for="acknowledge_to_address" class="form-label">To Address</label>
+                        <input type="text" class="form-control" id="acknowledge_to_address"
+                            name="acknowledge_to_address" formControlName="acknowledge_to_address" placeholder=""
+                            required>
+
+                    </div>
+                    <div class="col-md-2">
+                        <label for="received_on" class="form-label">Receive On</label>
+                        <input type="date" class="form-control" id="received_on" name="received_on"
+                            formControlName="received_on" placeholder="" required>
+
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                    <div class="col-md-12">
+                        <label for="acknowledge_subject" class="form-label">Subject</label>
+                        <textarea class="form-control" id="acknowledge_subject" name="acknowledge_subject"
+                            formControlName="acknowledge_subject" required rows="5" col="10"></textarea>
+
+                    </div>
+
+
+
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                    <div class="col-md-12">
+                        <label for="acknowledge_description" class="form-label">Description</label>
+                        <textarea class="form-control" id="acknowledge_description" name="acknowledge_description"
+                            formControlName="acknowledge_description" required rows="5" col="10"></textarea>
+
+                    </div>
+
+
+
+                </div>
+
+                <div class="row mb-4 ms-5 mx-5">
+
+                    <div class="col-md-12">
+                        <label for="acknowledge_remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="acknowledge_remarks" name="acknowledge_remarks"
+                            formControlName="acknowledge_remarks" required rows="5" col="10"></textarea>
+                    </div>
+
+
+                </div>
+
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-12">
+                        <label for="is_received" class="form-label">Acknowledge </label>
+                        <input type="checkbox" name="is_received" id="is_received" formControlName="is_received"
+                            required>
+                    </div>
+                </div>
+                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                    Data save successfully. You can proceed to next step.
+                </div>
+                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                    Data could not saved!! Please try again.
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

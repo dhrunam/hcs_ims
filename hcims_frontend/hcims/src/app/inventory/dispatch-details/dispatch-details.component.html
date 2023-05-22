@@ -1,0 +1,108 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Dispatch Details</h1>
+            </div>
+            <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Dispatch</button>
+            </div>
+            <table *ngIf="dispatch_details_list.results" datatable [dtOptions]="dtOptions" class="table table-bordered row-border hover">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>To Office</th>
+                        <th>To Address</th>
+                        <th>Dispatch On</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of dispatch_details_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.related_dispatch_to_office.name}}</td>
+                        <td>{{f.dispatch_to_address}}</td>
+                        <td>{{f.dispatch_on}}</td>
+                        <td>
+                            <input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)" style="height:10%; margin-top: 2rem;">
+                            <input type="button" class="btn btn-primary ms-3" value="View Item(s)" (click)="onRedirectToDispatchItemList(f.id)" style="height:10%; margin-top: 2rem;">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Dispatch Details</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()" > 
+
+               <div class="row mt-5 mb-4 ms-5 mx-5">
+                <div class="col-md-5">
+                    <input type="hidden" class="form-control" id="id" name="id" formControlName="id" 
+                     required>
+                     <label for="dispatch_to_office" class="form-label">To Office</label>
+                     <select class="form-select" id="dispatch_to_office" name="dispatch_to_office" formControlName="dispatch_to_office" required>
+                         <option  selected> -- Choose a Fund -- </option>
+                         <option *ngFor="let t of office_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                     </select>
+                 </div>
+
+                <div class="col-md-5">
+                    <label for="dispatch_to_address" class="form-label">To Address</label>
+                    <input type="text" class="form-control" id="dispatch_to_address" name="dispatch_to_address" formControlName="dispatch_to_address" placeholder=""  required>
+              
+                </div>
+                <div class="col-md-2">
+                    <label for="dispatch_on" class="form-label">Dispatch On</label>
+                    <input type="date" class="form-control" id="dispatch_on" name="dispatch_on" formControlName="dispatch_on" placeholder=""  required>
+            
+                </div>
+               </div>
+               <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                <div class="col-md-12">
+                    <label for="dispatch_subject" class="form-label">Subject</label>
+                    <textarea class="form-control" id="dispatch_subject" name="dispatch_subject" formControlName="dispatch_subject" required rows="5" col="10"></textarea>
+     
+                </div>
+
+
+
+           </div>
+
+               <div class="row mb-4 ms-5 mx-5">
+                <div class="col-md-12">
+                    <label for="dispatch_description" class="form-label">Description</label>
+                    <textarea class="form-control" id="dispatch_description" name="dispatch_description" formControlName="dispatch_description" required rows="5" col="10"></textarea>
+                </div>
+                    <div class="col-md-12">
+                        <label for="dispatch_remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="dispatch_remarks" name="dispatch_remarks" formControlName="dispatch_remarks" required rows="5" col="10"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+

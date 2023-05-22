@@ -1,0 +1,139 @@
+.sidebar{
+    position:sticky;
+    top:0;
+    left:0;
+    background: #579FDD;
+    min-height: 906px;
+    height:100%;
+    width: 250px;
+    padding: 6px 0;
+    transition: all 0.4s ease;
+}
+.sidebar.closed{
+    width: 78px;
+}
+.sidebar .logo_content .logo img{
+    opacity: 1;
+    pointer-events: none;
+}
+.sidebar.closed .logo_content .logo img{
+    opacity: 0;
+    pointer-events: none;
+    height: 20px;
+    width: 50px;
+}
+.sidebar #btn{
+    color: #fff;
+    position: absolute;
+    top:3px;
+    left: 90%;
+    line-height: 50px;
+    font-size: 35px;
+    width:50px;
+    height: 50px;
+    text-align: center;
+    transform: translateX(-50%);
+    cursor: pointer;
+}
+.sidebar.closed #btn{
+    left: 50%;
+}
+.sidebar .nav_list{
+    overflow: auto;
+}
+.sidebar.closed .nav_list{
+    overflow: visible;
+}
+.sidebar .nav_list li{
+    margin-left: -30px;
+    position: relative;
+    list-style: none;
+    transition: all .4s ease;
+}
+.sidebar .nav_list li:hover{
+    background: #7CB8EC;
+    border-radius: 12px;
+    color: black;
+}
+.sidebar .nav_list li .icon-link{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.sidebar.closed .nav_list li .icon-link{
+    display: block;
+}
+.sidebar .nav_list li i{
+    height: 50px;
+    min-width: 78px;
+    text-align: center;
+    line-height: 50px;
+    color: #fff;
+    font-size: 20px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+.sidebar .nav_list li.showMenu i.arrow{
+    transform: rotate(-180deg);
+}
+.sidebar.closed .nav_list i.arrow{
+    display: none;
+}
+.sidebar .nav_list li a{
+    display:flex;
+    text-decoration: none;
+    align-items: center;
+}
+.sidebar .nav_list li a .links_name{
+    font-size: 18px;
+    font-weight: 400;
+    color:#fff;
+}
+.sidebar.closed .nav_list li a .links_name{
+    opacity: 0;
+    pointer-events: none;
+}
+.sidebar .nav_list li .sub-menu{
+    background: #7CB8EC;
+    padding: 6px 6px 14px 90px;
+    margin-top: -10px;
+    display:none;
+}
+.sidebar .nav_list li.showMenu .sub-menu{
+    display: block;
+}
+.sidebar.closed .nav_list li .sub-menu{
+    position:absolute;
+    left: 100%;
+    top:-10px;
+    margin-top: 0;
+    padding: 10px 50px;
+    border-radius: 0 6px 6px 0;
+    opacity: 0;
+    pointer-events: none;
+    display: block;
+}
+.sidebar.closed .nav_list li:hover .sub-menu{
+    top: 0;
+    opacity: 1;
+    pointer-events: auto;
+}
+.sidebar .nav_list li .sub-menu .links_name{
+    display: none;
+}
+.sidebar.closed .nav_list li .sub-menu .links_name{
+    font-size: 18px;
+    opacity: 1;
+    display: block;
+}
+.sidebar .nav_list li .sub-menu a{
+    color: #fff;
+    font-size: 15px;
+    padding: 5px 0;
+    white-space: nowrap;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+}
+.sidebar .nav_list li .sub-menu a:hover{
+    opacity: 1;
+}

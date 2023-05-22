@@ -1,0 +1,180 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+            Data save successfully.
+        </div>
+        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+            Data could not saved!! Please try again.
+        </div>
+        <div class=" p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Office</h1>
+            </div>
+
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Office</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Office</th>
+
+                        <th>District</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of office_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.name}}</td>
+
+                        <td>{{f.related_district.name}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Office</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Office<span class="text-danger">*</span></label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                            placeholder="e.g. High Court Of Sikkim"
+                            [ngClass]="{ 'is-invalid': submitted && f['name'].errors }" required>
+
+                        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">Office name is required</div>
+                            <div *ngIf="f['name'].errors['maxlength']">Maximum number of Characters should not be more
+                                then 150.</div>
+                            <div *ngIf="f['name'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more then
+                                3 Characters</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">State<span class="text-danger">*</span></label>
+                        <select class="form-select" id="state" name="state" formControlName="state"
+                            [ngClass]="{ 'is-invalid': submitted && f['state'].errors }" required>
+                            <option value="" disabled>Choose a State</option>
+                            <option *ngFor="let t of state_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['state'].errors" class="invalid-feedback">
+                            <div *ngIf="f['state'].errors['required']">State is required</div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="username" class="form-label">District<span class="text-danger">*</span></label>
+                        <select class="form-select" id="district" name="district" formControlName="district"
+                            [ngClass]="{ 'is-invalid': submitted && f['district'].errors }" required>
+                            <option value="" disabled>Choose a District</option>
+                            <option *ngFor="let t of district_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                        <div *ngIf="submitted && f['district'].errors" class="invalid-feedback">
+                            <div *ngIf="f['district'].errors['required']">District is required</div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Address Line 1<span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control" id="address_line1" name="address_line1"
+                            formControlName="address_line1"
+                            [ngClass]="{ 'is-invalid': submitted && f['address_line1'].errors }" required rows="5"
+                            col="10">
+                        </textarea>
+                        <div *ngIf="submitted && f['address_line1'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address_line1'].errors['required']">Address Line 1 is required</div>
+                            <div *ngIf="f['address_line1'].errors['maxlength']">Maximum number of Characters should not
+                                be more
+                                then 150.</div>
+                            <div *ngIf="f['address_line1'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more then
+                                3 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Address Line 2<span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control" id="address_line2" name="address_line2"
+                            formControlName="address_line2"
+                            [ngClass]="{ 'is-invalid': submitted && f['address_line2'].errors }" required rows="5"
+                            col="10"></textarea>
+                        <div *ngIf="submitted && f['address_line2'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address_line2'].errors['required']">Address Line 2 is required</div>
+                            <div *ngIf="f['address_line2'].errors['maxlength']">Maximum number of Characters should not
+                                be more
+                                then 150.</div>
+                            <div *ngIf="f['address_line2'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more then
+                                3 Characters</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Landmark<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="address_line3" name="address_line3"
+                            formControlName="address_line3" placeholder=""
+                            [ngClass]="{ 'is-invalid': submitted && f['address_line3'].errors }" required>
+                        <div *ngIf="submitted && f['address_line1'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address_line3'].errors['required']">Address Line 3 is required</div>
+                            <div *ngIf="f['address_line3'].errors['maxlength']">Maximum number of Characters should not
+                                be more
+                                then 150.</div>
+                            <div *ngIf="f['address_line3'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more then
+                                3 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="username" class="form-label">Pin<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="pin" name="pin" formControlName="pin"
+                            placeholder="e.g. 737101" [ngClass]="{ 'is-invalid': submitted && f['pin'].errors }"
+                            required>
+                        <div *ngIf="submitted && f['pin'].errors" class="invalid-feedback">
+                            <div *ngIf="f['pin'].errors['required']">Pin is required</div>
+                            <div *ngIf="f['pin'].errors['maxlength']">Maximum number of Characters should not
+                                be more
+                                then 6 Characters.</div>
+                            <div *ngIf="f['pin'].errors['minlength']">Minimum number of Characters should be equal to or
+                                more then
+                                6 Characters</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                    Data save successfully.
+                </div>
+                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                    Data could not saved!! Please try again.
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

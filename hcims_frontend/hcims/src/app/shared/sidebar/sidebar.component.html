@@ -1,0 +1,114 @@
+<div class="sidebar">
+    <div class="logo_content">
+        <div class="logo text-center text-light mt-4">
+            <img src="../../assets/hcs_logo.png" height="120px;">
+        </div>
+        <i class='bx bx-menu' id="btn"></i>
+    </div>
+    <hr style="color: white;">
+
+    <!-- for high court -->
+    <ul class="nav_list" [hidden]="!isHighCourtUser">
+        <li>
+            <a routerLink="/dashboard">
+                <i class='bx bxs-dashboard'></i>
+                <span class="links_name">Dashboard</span>
+            </a>
+        </li>
+        <li>
+            <div class="icon-link">
+                <a routerLink="/config/district">
+                    <i class='bx bxs-briefcase'></i>
+                    <span class="links_name">Configuration</span>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu" *ngIf="isHighCourtUser">
+                <li><a routerLink="/config/district">District</a></li>
+                <li><a routerLink="/config/designation">Designation</a></li>
+                <li><a routerLink="/config/accounthead">Account Head</a></li>
+                <li><a routerLink="/config/fy">Finacial Year</a></li>
+                <li><a routerLink="/config/item_type"> Item Type </a></li>
+                <li><a routerLink="/config/item"> Item</a></li>
+                <li><a routerLink="/config/unit"> Unit </a></li>
+                <li><a routerLink="/config/vendor"> Vendor </a></li>
+                <li><a routerLink="/config/office"> Office </a></li>
+                <li><a routerLink="/config/division"> Division </a></li>
+                <li><a routerLink="/config/location"> Location </a></li>
+                <!-- <li><a href="/admin-dashboard" >District</a></li>
+                <li><a href="/admin-dashboard/complex/update">Complex</a></li>
+                <li><a href="/admin-dashboard/department/update">Department</a></li>
+                <li><a href="/admin-dashboard/designation/update">Designation</a></li> -->
+            </ul>
+        </li>
+        <li>
+            <div class="icon-link">
+                <a href="/inventory/fund">
+                    <i class='bx bxs-user-badge'></i>
+                    <span class="links_name">Inventory</span>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu">
+                <li *ngIf="isHighCourtUser"><a routerLink="/inventory/fund">Fund</a></li>
+                <!-- <li><a href="/inventory/purchase" >Purchase Wizard</a></li>
+
+                <li><a href="/inventory/purchase_details">Purchase</a></li>
+                <li><a href="/inventory/items/purchase">Purchase Items</a></li>
+                <li><a href="/inventory/item/purchase/receive">Received Items</a></li>
+                <li><a href="/inventory/dispatch_details">Dispatch</a></li> -->
+                <li *ngIf="!isHighCourtUser"><a routerLink="/inventory/dispatch/acknowledge">Consignment Acknowledgement</a>
+                </li>
+
+            </ul>
+        </li>
+
+        <li>
+            <div class="icon-link">
+                <a routerLink="/user/reg">
+                    <i class='bx bxs-user-badge'></i>
+                    <span class="links_name">Users</span>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a routerLink="/user/reg">Register User</a></li>
+
+            </ul>
+        </li>
+
+
+    </ul>
+
+    <!-- for District Courts -->
+    <ul class="nav_list" [hidden]="isHighCourtUser">
+        <li>
+            <a routerLink="/dashboard">
+                <i class='bx bxs-dashboard'></i>
+                <span class="links_name">Dashboard</span>
+            </a>
+        </li>
+
+        <li>
+            <div class="icon-link">
+                <a href="/">
+                    <i class='bx bxs-user-badge'></i>
+                    <span class="links_name">Inventory</span>
+                </a>
+                <i class="bx bxs-chevron-down arrow"></i>
+            </div>
+            <ul class="sub-menu">
+                <!-- <li ><a href=" /inventory/fund">Fund</a></li> -->
+                <!-- <li><a href="/inventory/purchase" >Purchase Wizard</a></li>
+        
+                        <li><a href="/inventory/purchase_details">Purchase</a></li>
+                        <li><a href="/inventory/items/purchase">Purchase Items</a></li>
+                        <li><a href="/inventory/item/purchase/receive">Received Items</a></li>
+                        <li><a href="/inventory/dispatch_details">Dispatch</a></li> -->
+                <li><a routerLink="/inventory/dispatch/acknowledge">Consignment Acknowledgement</a>
+                </li>
+
+            </ul>
+        </li>
+    </ul>
+</div>

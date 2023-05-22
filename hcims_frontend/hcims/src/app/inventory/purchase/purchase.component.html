@@ -1,0 +1,697 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="container">
+            <div class="stepwizard">
+                <div class="stepwizard-row setup-panel">
+                    <div class="stepwizard-step">
+                        <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                        <p>Purchase Details</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                        <p>Purchase Items</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                        <p>Received Items</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-4" type="button" class="btn btn-default btn-circle" disabled="disabled">4</a>
+                        <p>Dispatch Detailas</p>
+                    </div>
+                    <div class="stepwizard-step">
+                        <a href="#step-5" type="button" class="btn btn-default btn-circle" disabled="disabled">5</a>
+                        <p> Acknowledgement </p>
+                    </div>
+                </div>
+            </div>
+            <div role="form">
+                <div class="row setup-content" id="step-1">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <h3 class="text-center"> Purchase Details </h3>
+                            <form [formGroup]="purchaseEntryFrom" (ngSubmit)="onPurchaseDetaislSubmit()">
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-12">
+                                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id"
+                                            required>
+                                        <input type="hidden" class="form-control" id="fund" name="fund"
+                                            formControlName="fund" required>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-4">
+                                        <label for="vendor" class="form-label">Vendor</label>
+                                        <select class="form-select" id="vendor" name="vendor" formControlName="vendor"
+                                            required>
+                                            <option selected> -- Choose a Vendor -- </option>
+                                            <option *ngFor="let t of vendor_list.results" [ngValue]="t.id">{{ t.name }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="order_no" class="form-label">Order No</label>
+                                        <input type="text" class="form-control" id="order_no" name="order_no"
+                                            formControlName="order_no" placeholder="" required>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="invoice_no" class="form-label">Invoice No</label>
+                                        <input type="text" class="form-control" id="invoice_no" name="invoice_no"
+                                            formControlName="invoice_no" placeholder="" required>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="row mb-4 ms-5 mx-5">
+                                    <div class="col-md-4">
+                                        <label for="purchase_date" class="form-label">Purchase Date</label>
+                                        <input type="date" class="form-control" id="purchase_date" name="purchase_date"
+                                            formControlName="purchase_date" placeholder="" required>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="is_dispatchable" class="form-label">Purchase to Dispatch to other
+                                            location?</label><br>
+                                        <input class="form-radio ms-5" type="radio" name="is_dispatchable"
+                                            id="is_dispatchable_yes" formControlName="is_dispatchable"
+                                            [checked]="is_dispatchable" value="true" checked> Yes
+                                        <input class="form-radio ms-5" type="radio" name="is_dispatchable"
+                                            id="is_dispatchable_no" formControlName="is_dispatchable"
+                                            [checked]="!is_dispatchable" value="false"> No
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="purchase_order_url" class="form-label">Upload Purchase Order</label>
+                                        <input type="file" class="form-control" id="purchase_order_url"
+                                            name="purchase_order_url" placeholder=""
+                                            (change)="onPurchaseOrderChange($event)" required>
+                                        <div *ngIf="current_purchase_order_url.length>0"><a
+                                                href="{{current_purchase_order_url}}" rel="noopener noreferrer" download
+                                                target="_blank">View File</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="remarks" class="form-label">Remarks</label>
+                                        <textarea class="form-control" id="remarks" name="remarks"
+                                            formControlName="remarks" required rows="5" col="10"></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                    Data save successfully. You can proceed to next step.
+                                </div>
+                                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                    Data could not saved!! Please try again.
+                                </div>
+
+                                <div class="mt-4 text-center">
+                                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                    <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                        (click)="onPurchaseDetailsCancel()">
+                                </div>
+
+                                <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                    <button class="btn btn-primary prevBtn  mx-2" type="button"
+                                        (click)="OnPreviousButtonClick()">Previous</button>
+                                    <button class="btn btn-primary nextBtn " type="button"
+                                        (click)="onPurchaseItemTabLoad()">Next</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-2">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <div class="title mt-4 text-center">
+                                <h1>Purchase Items</h1>
+                            </div>
+                            <div class="p-3" *ngIf="isPurchaseItemsShowTable">
+                                <div class="button text-end mb-4">
+                                    <button class="btn btn-primary" (click)="onPurchaseItemsShowTable()">+ Add Purchase
+                                        Itmes</button>
+                                </div>
+                                <table *ngIf="purchase_item_list.results" datatable [dtOptions]="dtOptions"
+                                    class="table table-bordered row-border hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>Purchase Order</th>
+                                            <th>Item</th>
+                                            <th>Type</th>
+                                            <th>Specification</th>
+                                            <th>Quantity</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let f of purchase_item_list.results; let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{f.related_purchase.order_no}}</td>
+                                            <td>{{f.related_item.name}}</td>
+                                            <td>{{f.related_item.related_item_type.name}}</td>
+                                            <td>{{f.item_specification}}</td>
+                                            <td>{{f.quantity}}</td>
+                                            <td><input type="button" class="btn btn-primary ms-3" value="Edit"
+                                                    (click)="onPurchaseItemEdit(f.id)"
+                                                    style="height:10%; margin-top: 2rem;"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                    Data save successfully. You can add more item or proceed to next step.
+                                </div>
+                                <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                    Data could not saved!! Please try again.
+                                </div>
+                                <!-- <div class="page-buttons">
+                                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                                </button>
+                                <button class="btn next" (click)="fetchNext()"> Next
+                                </button>
+                             </div>
+                               -->
+                            </div>
+                            <div class="form" *ngIf="!isPurchaseItemsShowTable">
+
+                                <form [formGroup]="purchaseItemEntryForm" (ngSubmit)="onPurchaseItemSubmit()">
+
+                                    <div class="row mt-5 mb-4 ms-5 mx-5">
+                                        <div class="col-md-6">
+                                            <input type="hidden" class="form-control" id="id" name="id"
+                                                formControlName="id" required>
+                                            <input type="hidden" class="form-control" id="purchase" name="purchase"
+                                                formControlName="purchase" required>
+                                            <!-- <input type="hidden" id="remarks" name="remarks" formControlName="remarks"> -->
+                                            <label for="item" class="form-label">Item</label>
+                                            <!-- <select class="form-select" id="item" name="item" formControlName="item"
+                                                required>
+                                                <option selected> -- Choose a Item -- </option>
+                                                <option *ngFor="let t of item_list.results" [ngValue]="t.id">{{ t.name
+                                                    }}</option>
+                                            </select> -->
+                                            <div class="ng-autocomplete col-md-6">
+                                                <ng-autocomplete #item_auto_complete [data]="item_list"
+                                                    [searchKeyword]="keyword" placeholder="select item"
+                                                    (selected)='selectEvent($event)'
+                                                    (inputChanged)='onChangeSearch($event)'
+                                                    (inputFocused)='onFocused($event)' [itemTemplate]="itemTemplate"
+                                                    [notFoundTemplate]="notFoundTemplate" [minQueryLength]="3"
+                                                    [inputCleared]="onInputCleared($event)"
+                                                    [initialValue]="default_item">
+                                                </ng-autocomplete>
+
+                                                <ng-template #itemTemplate let-item>
+                                                    <a [innerHTML]="item.name"></a>
+                                                </ng-template>
+
+                                                <ng-template #notFoundTemplate let-notFound>
+                                                    <div [innerHTML]="notFound"></div>
+                                                </ng-template>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="unit" class="form-label">Unit</label>
+                                            <select class="form-select" id="unit" name="unit" formControlName="unit"
+                                                required>
+                                                <option selected> -- Choose a Unit -- </option>
+                                                <option *ngFor="let t of unit_list.results" [ngValue]="t.id">{{ t.name
+                                                    }}</option>
+                                            </select>
+
+                                        </div>
+
+
+
+                                    </div>
+
+                                    <div class="row mb-4 ms-5 mx-5">
+
+                                        <div class="col-md-6">
+                                            <label for="unit_price" class="form-label">Unit Price</label>
+                                            <input type="text" class="form-control" id="unit_price" name="unit_price"
+                                                formControlName="unit_price" placeholder="" required>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="quantity" class="form-label">Quantity</label>
+                                            <input type="text" class="form-control" id="quantity" name="quantity"
+                                                formControlName="quantity" placeholder="" required>
+
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="row mb-4 ms-5 mx-5">
+                                        <div class="col-md-12">
+                                            <label for="item_specification" class="form-label">Specification</label>
+                                            <textarea class="form-control" id="item_specification"
+                                                name="item_specification" formControlName="item_specification" required
+                                                rows="5" col="10"></textarea>
+
+                                        </div>
+                                    </div>
+                                    <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                        Data save successfully. You can proceed to next step.
+                                    </div>
+                                    <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                        Data could not saved!! Please try again.
+                                    </div>
+                                    <!-- <div class="row mb-4 ms-5 mx-5">
+                                                                        <div class="col-md-12">
+                                                                            <label for="remarks" class="form-label">Remarks</label>
+                                                                            <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required rows="5" col="10"></textarea>
+                                                                        </div>
+                                                                    </div> -->
+
+                                    <div class="mt-4 text-center">
+                                        <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                        <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                            (click)="onPurchaseItemsShowTable()">
+                                    </div>
+                                </form>
+
+                            </div>
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                    <button class="btn btn-primary prevBtn mx-2" type="button"
+                                        (click)="OnPreviousButtonClick()">Previous</button>
+                                    <button class="btn btn-primary nextBtn " type="button"
+                                        (click)="onReceivedItemTabLoad()">Next</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-3">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <div *ngIf="isReceivedItemShowTable">
+                                <form [formGroup]="receivedItemEntryForm" (ngSubmit)="onReceivedItemsSubmit()">
+                                    <input type="hidden" id="purchase" name="purchase" formControlName="purchase">
+                                    <input type="hidden" id="received_office" name="received_office"
+                                        formControlName="received_office">
+                                    <div class="row">
+
+                                        <div class="col-md-12" formArrayName="items">
+                                            <div class="title mt-4 text-center">
+                                                <h1> Items</h1>
+                                            </div>
+                                            <table *ngIf="purchase_item_list.results" class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No.</th>
+                                                        <th>Item</th>
+                                                        <th>Specification</th>
+                                                        <th>Purchase Qty.</th>
+                                                        <th>Received Qty.</th>
+                                                        <th>Remarks</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let f of receivedEntryFormItems.controls; let i=index"
+                                                        [formGroup]="f">
+
+                                                        <td>{{i+1}}</td>
+                                                        <td>{{f.value.name}}</td>
+                                                        <td>{{f.value.item_specification}}</td>
+                                                        <td>{{f.value.quantity}}</td>
+                                                        <td>
+                                                            <input type="hidden" id="id" name="id" formControlName="id">
+                                                            <input type="hidden" id="name" name=""
+                                                                formControlName="name">
+                                                            <input type="hidden" id="item_specification" name=""
+                                                                formControlName="item_specification">
+                                                            <input type="hidden" id="quantity" name="quantity"
+                                                                formControlName="quantity">
+                                                            <input type="hidden" id="purchase_item" name="purchase_item"
+                                                                formControlName="purchase_item">
+                                                            <input type="number" class="form-control"
+                                                                id="quantity_received" name="quantity_received"
+                                                                formControlName="quantity_received" placeholder=""
+                                                                max="{{f.value.quantity}}"
+                                                                value="{{f.value.quantity_received}}"
+                                                                (change)="onQuantityReceivedChange(i)" required>
+                                                        </td>
+
+                                                        <td>
+                                                            <textarea class="form-control" id="remarks" name="remarks"
+                                                                formControlName="remarks" required rows="5"
+                                                                col="10">{{f.value.remarks}}</textarea>
+
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row mb-4 ms-5 mx-5">
+                                            <div class="col-md-3">
+                                                <label for="received_on" class="form-label">Received On</label>
+                                                <input type="date" class="form-control" id="received_on"
+                                                    name="received_on" formControlName="received_on" placeholder=""
+                                                    required>
+
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                            Data save successfully. You can proceed to next step.
+                                        </div>
+                                        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                            Data could not saved!! Please try again.
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="mt-4 text-center">
+                                                <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                                <!-- <input type="button" class="btn btn-primary ms-3" value="Cancel"> -->
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <button class="btn btn-primary prevBtn  mx-2" type="button"
+                                    (click)="OnPreviousButtonClick()">Previous</button>
+                                <button class="btn btn-primary nextBtn " type="button"
+                                    (click)="onDispatchLoad()">Next</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-4">
+                    <div class="col-xs-12">
+                        <div class="col-md-12">
+                            <h3 class="text-center"> Dispatch Details </h3>
+                            <div class="p-3" *ngIf="dispatchStepShowStage['isDispatchDetailTable']">
+                                <div class="button text-end mb-4">
+                                    <button class="btn btn-primary" (click)="onAddDispatch()">+ Add Dispatch</button>
+                                </div>
+                                <table *ngIf="dispatch_details_list.results" datatable [dtOptions]="dtOptions"
+                                    class="table table-bordered row-border hover">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>To Office</th>
+                                            <th>To Address</th>
+                                            <th>Dispatch On</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let f of dispatch_details_list.results; let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>{{f.related_dispatch_to_office.name}}</td>
+                                            <td>{{f.dispatch_to_address}}</td>
+                                            <td>{{f.dispatch_on}}</td>
+                                            <td>
+                                                <input type="button" class="btn btn-primary ms-3" value="Edit"
+                                                    (click)="onDispatchDetailsEdit(f.id)"
+                                                    style="height:10%; margin-top: 2rem;">
+                                                <input type="button" class="btn btn-primary ms-3"
+                                                    value="Dispatch Item(s)"
+                                                    (click)="onRedirectToDispatchItemList(f.id)"
+                                                    style="height:10%; margin-top: 2rem;">
+                                                <input type="button" class="btn btn-primary ms-3" value="Print Letter"
+                                                    (click)="onPrintDispatchLetter(f.id)"
+                                                    style="height:10%; margin-top: 2rem;">
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="form" *ngIf="dispatchStepShowStage['isDispatchDetailForm']">
+                                <form [formGroup]="dispatchDetailsEntryForm" (ngSubmit)="onDispatchDetailsSubmit()">
+
+                                    <div class="row mt-5 mb-4 ms-5 mx-5">
+                                        <div class="col-md-5">
+                                            <input type="hidden" class="form-control" id="id" name="id"
+                                                formControlName="id" required>
+                                            <input type="hidden" id="purchase" name="purchase"
+                                                formControlName="purchase">
+                                            <label for="dispatch_to_office" class="form-label">To Office</label>
+                                            <select class="form-select" id="dispatch_to_office"
+                                                name="dispatch_to_office" formControlName="dispatch_to_office" required>
+                                                <option selected> -- Choose a Fund -- </option>
+                                                <option *ngFor="let t of office_list.results" [ngValue]="t.id">{{ t.name
+                                                    }}
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-5">
+                                            <label for="dispatch_to_address" class="form-label">To Address</label>
+                                            <input type="text" class="form-control" id="dispatch_to_address"
+                                                name="dispatch_to_address" formControlName="dispatch_to_address"
+                                                placeholder="" required>
+
+                                        </div>
+                                        <div class="col-md-2">
+                                            <label for="dispatch_on" class="form-label">Dispatch On</label>
+                                            <input type="date" class="form-control" id="dispatch_on" name="dispatch_on"
+                                                formControlName="dispatch_on" placeholder="" required>
+
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5 mb-4 ms-5 mx-5">
+
+                                        <div class="col-md-12">
+                                            <label for="dispatch_subject" class="form-label">Subject</label>
+                                            <textarea class="form-control" id="dispatch_subject" name="dispatch_subject"
+                                                formControlName="dispatch_subject" required rows="5"
+                                                col="10"></textarea>
+
+                                        </div>
+
+
+
+                                    </div>
+                                    <div class="row mt-5 mb-4 ms-5 mx-5">
+                                        <div class="col-md-6">
+                                            <label for="received_by" class="form-label">Received by</label>
+                                            <input type="text" class="form-control" id="received_by" name="received_by"
+                                                formControlName="received_by" placeholder="" required>
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="handover_doc_url" class="form-label">Upload Handover
+                                                Document</label>
+                                            <input type="file" class="form-control" id="handover_doc_url"
+                                                name="handover_doc_url" formControlName="handover_doc_url"
+                                                placeholder="" required>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-4 ms-5 mx-5">
+                                        <div class="col-md-12">
+                                            <label for="dispatch_description" class="form-label">Description</label>
+                                            <textarea class="form-control" id="dispatch_description"
+                                                name="dispatch_description" formControlName="dispatch_description"
+                                                required rows="5" col="10"></textarea>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label for="dispatch_remarks" class="form-label">Remarks</label>
+                                            <textarea class="form-control" id="dispatch_remarks" name="dispatch_remarks"
+                                                formControlName="dispatch_remarks" required rows="5"
+                                                col="10"></textarea>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mt-4 text-center">
+                                        <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                        <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                            (click)="onDispatchDetailsCancel()">
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="p-3" *ngIf="dispatchStepShowStage['isDispatchItemTable']">
+                                <form [formGroup]="dispatchItemEntryForm" (ngSubmit)="onDispatchItemsSubmit()">
+                                    <input type="hidden" id="purchase" name="purchase" formControlName="purchase">
+                                    <input type="hidden" id="dispatch" name="dispatch" formControlName="dispatch">
+
+                                    <div class="row">
+
+                                        <div class="col-md-12" formArrayName="items">
+                                            <div class="title mt-4 text-center">
+                                                <h1> Items</h1>
+                                            </div>
+                                            <table *ngIf="purchase_dispatch_item_list.results"
+                                                class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>S.No.</th>
+                                                        <th>Item</th>
+                                                        <!-- <th>Specification</th> -->
+                                                        <th>Purchase Qty.</th>
+                                                        <th>Received Qty.</th>
+                                                        <th>Total Dispatch Qty.</th>
+                                                        <th>Dispatch Qty.</th>
+                                                        <th>Remarks</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr *ngFor="let f of dispatchEntryFormItems.controls; let i=index"
+                                                        [formGroup]="f">
+
+                                                        <td>{{i+1}}</td>
+                                                        <td>{{f.value.name}}</td>
+                                                        <!-- <td>{{f.value.item_specification}}</td> -->
+                                                        <td>{{f.value.quantity_purchase}}</td>
+                                                        <td>{{f.value.quantity_received}}</td>
+                                                        <td>{{f.value.total_dispatch}}</td>
+                                                        <td>
+                                                            <input type="hidden" id="id" name="id" formControlName="id">
+                                                            <input type="hidden" id="name" name="name"
+                                                                formControlName="name">
+                                                            <input type="hidden" id="quantity_received"
+                                                                name="quantity_received"
+                                                                formControlName="quantity_received">
+                                                            <!-- <input type="hidden" id="purchase_item_received"
+                                                                name="purchase_item_received"
+                                                                formControlName="purchase_item_received"> -->
+                                                            <input type="number" class="form-control"
+                                                                id="quantity_dispatch" name="quantity_dispatch"
+                                                                formControlName="quantity_dispatch" placeholder=""
+                                                                required
+                                                                (change)="onQuantityDispatchChange(i,f.value.quantity_received)">
+                                                        </td>
+
+                                                        <td>
+                                                            <textarea class="form-control" id="remarks" name="remarks"
+                                                                formControlName="remarks" required rows="5"
+                                                                col="10">{{f.value.remarks}}</textarea>
+
+                                                        </td>
+
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row mb-4 ms-5 mx-5">
+                                            <div class="col-md-6">
+                                                <label for="lot_no" class="form-label">Lot Number <span
+                                                        class="text-danger">*</span></label>
+                                                <input class="form-control" type="text" name="lot_no" id="lot_no"
+                                                    formControlName="lot_no" required>
+                                            </div>
+
+
+                                        </div>
+
+                                        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                                            Data save successfully. You can proceed to next step.
+                                        </div>
+                                        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+                                            Data could not saved!! Please try again.
+                                        </div>
+                                        <div class="col-md-12">
+
+                                            <div class="mt-4 text-center">
+                                                <input type="submit" class="btn btn-primary ms-3" value="Save">
+                                                <input type="button" class="btn btn-primary ms-3" value="Cancel"
+                                                    (click)="OnCancelDespatchItemTable()">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </form>
+                            </div>
+                            <div class="form" *ngIf="dispatchStepShowStage['isDispatchItemForm']">
+
+                            </div>
+                            <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                                <button class="btn btn-primary prevBtn mx-2" type="button"
+                                    (click)="OnPreviousButtonClick()">Previous</button>
+                                <button class="btn btn-primary nextBtn " type="button"
+                                    (click)="onAcknowledgementTabLoad()"
+                                    [hidden]="isDispatchDetailNextButtonActive">Next</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row setup-content" id="step-5">
+                    <div class="col-xs-12">
+                        <div class="col-md-12" *ngIf="acknowledgmentDetails">
+                            <h3 class="text-center"> Acknowledgement </h3>
+                            <div class="row" *ngIf="isAcknowledge">
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <label for="order_no" class="form-label">To</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <span>{{acknowledgmentDetails.acknowledge_to_address}}</span><br>
+                                        <span>{{acknowledgmentDetails.related_dispatch_from_office.name}}</span><br>
+                                        <span>{{acknowledgmentDetails.related_dispatch_from_office.address_line1}}</span><br>
+                                        <span>{{acknowledgmentDetails.related_dispatch_from_office.address_line2}}</span><br>
+                                        <span>{{acknowledgmentDetails.related_dispatch_from_office.address_line3}}</span><br>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <span>Subject: {{acknowledgmentDetails.acknowledge_subject}}</span><br>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <label for="order_no" class="form-label">Dear Sir/Madam</label>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <span> {{acknowledgmentDetails.acknowledge_description}}</span><br>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <span>With Regards,</span><br>
+                                    </div>
+                                </div>
+                                <div class="row mt-5 mb-4 ms-5 mx-5">
+                                    <div class="col-md-3">
+                                        <span> {{acknowledgmentDetails.acknowledge_description}}</span><br>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="row" *ngIf="!isAcknowledge">
+                                <div class="col-md-3 text-center text-danger">
+                                    <label for="order_no" class="form-label">The Party has not acknowledge yet.</label>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                        <div class="mt-4 mb-4 ms-5 mx-5 text-end ">
+                            <button class="btn btn-primary prevBtn  mx-2" type="button"
+                                (click)="OnPreviousButtonClick()">Previous</button>
+                            <!-- <button class="btn btn-success  pull-right" type="submit">Finish!</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

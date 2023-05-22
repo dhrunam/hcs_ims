@@ -1,0 +1,20 @@
+# altgraph @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot2/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/altgraph-0.17.2-py2.py3-none-any.whl
+asgiref==3.6.0
+distlib==0.3.6
+Django==4.1.7
+django-cors-headers==3.14.0
+django-filter==22.1
+django-rest-durin==1.1.0
+djangorestframework==3.14.0
+djangorestframework-datatables==0.7.0
+djangorestframework-link-header-pagination==0.1.1
+filelock==3.8.2
+# future @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot2/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/future-0.18.2-py3-none-any.whl
+humanize==4.6.0
+# macholib @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot2/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/macholib-1.15.2-py2.py3-none-any.whl
+platformdirs==2.6.0
+psycopg2-binary==2.9.5
+pytz==2022.7.1
+# six @ file:///System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot2/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/python3/python3-124/six-1.15.0-py2.py3-none-any.whl
+sqlparse==0.4.3
+virtualenv==20.17.1

@@ -1,0 +1,201 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+            Data save successfully.
+        </div>
+        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+            Data could not saved!! Please try again.
+        </div>
+        <div class=" p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Vendors</h1>
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Vendor</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Vendor</th>
+                        <th>Address</th>
+                        <th>Contact Number</th>
+                        <th>Gst No.</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of item_type_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.name}}</td>
+                        <td>{{f.address}}</td>
+                        <td>{{f.contact_no}}</td>
+                        <td>{{f.gst_no}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Vendor</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-4">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <label for="unit" class="form-label"> Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="name" name="name" formControlName="name"
+                            placeholder="e.g. R K Enterprise" required
+                            [ngClass]="{ 'is-invalid': submitted && f['name'].errors }">
+
+                        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">Name is required</div>
+                            <div *ngIf="f['name'].errors['maxlength']">Maximum number of Characters should not be more
+                                then 100.</div>
+                            <div *ngIf="f['name'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more then
+                                3 Characters</div>
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gst_no" class="form-label">Contact Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="contact_no" name="contact_no"
+                            formControlName="contact_no" placeholder="" required
+                            [ngClass]="{ 'is-invalid': submitted && f['contact_no'].errors }">
+                        <div *ngIf="submitted && f['contact_no'].errors" class="invalid-feedback">
+                            <div *ngIf="f['contact_no'].errors['required']">Contact Number is required</div>
+                            <div *ngIf="f['contact_no'].errors['maxlength']">Maximum number of Characters should not be
+                                more
+                                then 12.</div>
+                            <div *ngIf="f['contact_no'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more then
+                                10 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gst_no" class="form-label">GST Number <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="gst_no" name="gst_no" formControlName="gst_no"
+                            placeholder="" required [ngClass]="{ 'is-invalid': submitted && f['gst_no'].errors }">
+                        <div *ngIf="submitted && f['gst_no'].errors" class="invalid-feedback">
+                            <div *ngIf="f['gst_no'].errors['required']">GST Number is required</div>
+                            <div *ngIf="f['gst_no'].errors['maxlength']">Maximum number of Characters should not be
+                                more
+                                then 15.</div>
+                            <div *ngIf="f['gst_no'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more then
+                                15 Characters</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-4">
+                        <!-- <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required> -->
+                        <label for="unit" class="form-label"> Bank Ac/No. <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="bank_account_no" name="bank_account_no"
+                            formControlName="bank_account_no" placeholder=""
+                            [ngClass]="{ 'is-invalid': submitted && f['bank_account_no'].errors }" required>
+                        <div *ngIf="submitted && f['bank_account_no'].errors" class="invalid-feedback">
+                            <div *ngIf="f['bank_account_no'].errors['required']">Bank Ac. No. is required</div>
+                            <div *ngIf="f['bank_account_no'].errors['maxlength']">Maximum number of Characters should
+                                not be
+                                more
+                                then 25.</div>
+                            <div *ngIf="f['bank_account_no'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more
+                                then
+                                8 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="gst_no" class="form-label">IFSC <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="ifsc" name="ifsc" formControlName="ifsc"
+                            placeholder="" [ngClass]="{ 'is-invalid': submitted && f['ifsc'].errors }" required>
+                        <div *ngIf="submitted && f['ifsc'].errors" class="invalid-feedback">
+                            <div *ngIf="f['ifsc'].errors['required']">IFSC is required</div>
+                            <div *ngIf="f['ifsc'].errors['maxlength']">Maximum number of Characters should
+                                not be
+                                more
+                                then 11.</div>
+                            <div *ngIf="f['ifsc'].errors['minlength']">Minimum number of Characters should be equal to
+                                or more
+                                then
+                                11 Characters</div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-12">
+                        <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="address" name="address" formControlName="address" rows="5"
+                            cols="10" [ngClass]="{ 'is-invalid': submitted && f['address'].errors }"
+                            required></textarea>
+                        <div *ngIf="submitted && f['address'].errors" class="invalid-feedback">
+                            <div *ngIf="f['address'].errors['required']">Address is required</div>
+                            <div *ngIf="f['address'].errors['maxlength']">Maximum number of Characters should
+                                not be
+                                more
+                                then 1024.</div>
+                            <div *ngIf="f['address'].errors['minlength']">Minimum number of Characters should be equal
+                                to or more
+                                then
+                                8 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="designation" class="form-label">Description <span
+                                class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" name="description" formControlName="description"
+                            rows="5" cols="10" [ngClass]="{ 'is-invalid': submitted && f['description'].errors }"
+                            required></textarea>
+                        <div *ngIf="submitted && f['description'].errors" class="invalid-feedback">
+                            <div *ngIf="f['description'].errors['required']">Description is required</div>
+                            <div *ngIf="f['description'].errors['maxlength']">Maximum number of Characters should
+                                not be
+                                more
+                                then 25.</div>
+                            <div *ngIf="f['description'].errors['minlength']">Minimum number of Characters should be
+                                equal to or more
+                                then
+                                8 Characters</div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" rows="5"
+                            cols="10" required></textarea>
+                        <div *ngIf="submitted && f['remarks'].errors" class="invalid-feedback">
+
+                            <div *ngIf="f['remarks'].errors['maxlength']">Maximum number of Characters should
+                                not be
+                                more
+                                then 1024.</div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="text-center mt-4">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save"
+                        style="height:10%; margin-top: 2rem;">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()"
+                        style="height:10%; margin-top: 2rem;">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

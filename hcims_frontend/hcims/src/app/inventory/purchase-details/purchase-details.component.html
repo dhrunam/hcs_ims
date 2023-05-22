@@ -1,0 +1,112 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+
+        <div class="p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Purchase Details</h1>
+            </div>
+            <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+                Data Added Successfully
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onRedirectToPurchaseUser()">+ Add Purchase</button>
+            </div>
+            <table datatable [dtOptions]="dtOptions" class="table table-bordered row-border hover" style="width:100% ;">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Cheque</th>
+                        <th>Vendor</th>
+                        <th>Purchase Order</th>
+                        <th>Invoice No.</th>
+                        <th>Purchase date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of purchase_details_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.cheque_no}}</td>
+                        <td>{{f.vendor_name}}</td>
+                        <td>{{f.order_no}}</td>
+                        <td>{{f.invoice_no}}</td>
+                        <td>{{f.purchase_date}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="View / Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-4 text-center">
+                <input type="button" class="btn btn-primary ms-3" value="Back to Fund" (click)="onBackToFundClick()">
+            </div>
+            <!-- <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+             </div>
+               -->
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Purchase Details</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="row mt-5 mb-4 ms-5 mx-5">
+                    <div class="col-md-3">
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <label for="fund" class="form-label">Fund</label>
+                        <select class="form-select" id="fund" name="fund" formControlName="fund" required>
+                            <option selected> -- Choose a Fund -- </option>
+                            <option *ngFor="let t of fund_list.results" [ngValue]="t.id">{{ t.cheque_no }}</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label for="vendor" class="form-label">Vendor</label>
+                        <select class="form-select" id="vendor" name="vendor" formControlName="vendor" required>
+                            <option selected> -- Choose a Vendor -- </option>
+                            <option *ngFor="let t of vendor_list.results" [ngValue]="t.id">{{ t.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="order_no" class="form-label">Order No</label>
+                        <input type="text" class="form-control" id="order_no" name="order_no" formControlName="order_no"
+                            placeholder="" required>
+
+                    </div>
+                    <div class="col-md-3">
+                        <label for="invoice_no" class="form-label">Invoice No</label>
+                        <input type="text" class="form-control" id="invoice_no" name="invoice_no"
+                            formControlName="invoice_no" placeholder="" required>
+
+                    </div>
+
+                </div>
+
+                <div class="row mb-4 ms-5 mx-5">
+                    <div class="col-md-3">
+                        <label for="purchase_date" class="form-label">Purchase Date</label>
+                        <input type="date" class="form-control" id="purchase_date" name="purchase_date"
+                            formControlName="purchase_date" placeholder="" required>
+
+                    </div>
+                    <div class="col-md-12">
+                        <label for="remarks" class="form-label">Remarks</label>
+                        <textarea class="form-control" id="remarks" name="remarks" formControlName="remarks" required
+                            rows="5" col="10"></textarea>
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-center">
+                    <input type="submit" class="btn btn-primary ms-3" value="Save">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,75 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="alert alert-success ms-5 mx-5" *ngIf="isSuccessful">
+            Data save successfully.
+        </div>
+        <div class="alert alert-danger ms-5 mx-5" *ngIf="isFail">
+            Data could not saved!! Please try again.
+        </div>
+        <div class=" p-3" *ngIf="isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Financial Year List</h1>
+            </div>
+            <div class="button text-end mb-4">
+                <button class="btn btn-primary" (click)="onShowTable()">+ Add Financial Year</button>
+            </div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Financial Year</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let f of financial_year_list.results; let i=index">
+                        <td>{{i+1}}</td>
+                        <td>{{f.financial_year}}</td>
+                        <td><input type="button" class="btn btn-primary ms-3" value="Edit" (click)="onEdit(f.id)"
+                                style="height:10%; margin-top: 2rem;"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="page-buttons">
+                <button class="btn prev" (click)="fetchPrevious()"> Prev
+                </button>
+                <button class="btn next" (click)="fetchNext()"> Next
+                </button>
+            </div>
+
+        </div>
+        <div class="form" *ngIf="!isShowTable">
+            <div class="title mt-4 text-center">
+                <h1>Financial Year</h1>
+            </div>
+            <form [formGroup]="entryForm" (ngSubmit)="onSubmit()">
+                <div class="mb-4 ms-5 d-flex" style="width:50%">
+                    <div class="d-block  w-100">
+                        <label for="financial_year" class="form-label">Financial Year<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" class="form-control" id="id" name="id" formControlName="id" required>
+                        <input type="text" class="form-control" id="financial_year" name="financial_year"
+                            formControlName="financial_year" placeholder="e.g. 2022-23" pattern="[0-9]{4}-[0-9]{2}"
+                            maxlength="7" [ngClass]="{'is-invalid': submitted && f['financial_year'].errors}" required>
+                        <div class="invalid-feedback" *ngIf="submitted && f['financial_year'].errors">
+                        
+                            <div *ngIf="f['financial_year'].errors['required']">
+                                Financial Year is required.
+                            </div>
+                            <div *ngIf="f['financial_year'].errors['pattern']">
+                                Please follow the right pattern.
+                            </div>
+                        </div>
+                    </div>
+                    <input type="submit" class="btn btn-primary ms-3" value="Save"
+                        style="height:10%; margin-top: 2rem;">
+                    <input type="button" class="btn btn-primary ms-3" value="Cancel" (click)="onShowTable()"
+                        style="height:10%; margin-top: 2rem;">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>

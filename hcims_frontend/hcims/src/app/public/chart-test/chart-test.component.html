@@ -1,0 +1,24 @@
+<div class="d-flex">
+    <app-sidebar></app-sidebar>
+    <!-- <div class="d-block w-100">
+        <app-header></app-header>
+        <div class="p-3">
+            <div style="display: block">
+                <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+                    [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+                </canvas>
+            </div>
+            <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button>
+        </div>
+    </div> -->
+
+    <div>
+        <div style="display: block">
+            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins"
+                [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+            </canvas>
+        </div>
+        <button mat-button mat-raised-button color="primary" (click)="randomize()">Update</button>
+    </div>
+
+</div>
